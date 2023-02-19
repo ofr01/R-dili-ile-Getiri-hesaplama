@@ -1,0 +1,57 @@
+---
+title: "getiri hesaplama"
+author: "ÖMER FARUK RESULOĞLU"
+date: "2023-02-19"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+---
+
+#Kütüphanelerin ve Veri setinin yüklenmesi
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(xts)
+library(zoo)
+library(data.table)
+library(readxl)
+bist <- read_excel("BİST 100.xlsx")
+View(bist)
+bist
+is.data.frame(bist)
+```
+##Verilerimizi tanıyalım
+```{r}
+summary(bist)
+head(bist,n = 5)
+
+
+```
+##Günlerin Etiketlenmesi
+```{r}
+günler<- bist$Tarih
+günler<- as.Date(günler)
+günler
+weekdays(günler)
+matrix(weekdays(günler), 41, 1)
+```
+##Değişkenlere gün etiketlerinin eklenmesi
+```{r}
+bist100<- zoo(bist$Açılış, günler)
+bist100
+bist100<- as.xts(bist100)
+bist
+
+```
+##Getiri serisinin hesaplanması
+```{r}
+bist_D1<- shift(bist100, n=1)
+getiri<-(bist100-bist_D1)/bist_D1
+plot(getiri)
+
+
+```
+
